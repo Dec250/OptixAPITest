@@ -1,0 +1,62 @@
+﻿<div class="container-fluid">
+    <div class="row text-center">
+
+        @* Usually I'd have more of a fancy page, this is just to show off the API data and filters.*@
+        <h1>Filters</h1>
+        <div class="row">
+            <label for="pageNumber">Page Number</label>
+            <input class="input-group" value="" type="number" id="pageNumber">
+
+            <label for="pageSize">Page Size</label>
+            <input class="input-group" value="" type="number" id="pageSize" />
+
+            <label for="title">Movie Title</label>
+            <input class="input-group" type="text" id="title" />
+
+            <label for="genre">Movie Genre</label>
+            <input class="input-group" type="text" id="genre" />
+
+            <label for="releaseDate">Release Date</label>
+            <input class="input-group" type="date" id="releaseDate" />
+
+            <button class="btn btn-primary" id="getMovieList">Get Movie List</button>
+        </div>
+
+        <div class="row">
+
+            <p id="displayMovieList"></p>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+
+        document.getElementById('getMovieList').addEventListener('click', async function () {
+
+            const page = document.getElementById('pageNumber').value;
+            const pageSize = document.getElementById('pageSize').value;
+            const title = document.getElementById('title').value;
+            const genre = document.getElementById('genre').value;
+            const releaseDate = document.getElementById('releaseDate').value;
+
+            const url = '/api/Movie/getmovies?pageNum=' + page + '&pageSize=' + pageSize + '&title=' + title + '&genre=' + genre + '&releaseDate=' + releaseDate;
+
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const data = await response.json();
+
+                document.getElementById('displayMovieList').innerHTML = data.map(movie => `<p>Index:  ${movie.movieId} - Title: ${movie.title} - Genre: ${movie.genre} - Release Date: ${movie.release_Date}</p>`).join('');
+            } else {
+                document.getElementById('displayMovieList').innerText = "An unexepected error has occured.";
+            }
+        });
+
+    </script>
+    }
